@@ -94,7 +94,7 @@ public class StudentController {
     public ResponseEntity<HttpStatus> attachDocuments(@PathVariable String studentId,
                                                       @PathVariable String documentType,
                                                       @RequestPart MultipartFile file) throws IOException {
-        studentService.saveDocuments(studentId,documentType, file);
+        studentService.saveDocuments(studentId, documentType, file);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
