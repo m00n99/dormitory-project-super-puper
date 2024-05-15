@@ -9,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.ooozakirov.miracle.workers.peristence.dto.student.CreateStudentRequest;
-import ru.ooozakirov.miracle.workers.peristence.dto.student.GetNonResidentStudentResponse;
-import ru.ooozakirov.miracle.workers.peristence.dto.student.GetStudentResponse;
-import ru.ooozakirov.miracle.workers.peristence.dto.student.UpdateStudentRequest;
+import ru.ooozakirov.miracle.workers.peristence.dto.student.*;
 import ru.ooozakirov.miracle.workers.peristence.service.StudentService;
 
 import java.io.IOException;
@@ -52,6 +49,12 @@ public class StudentController {
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT')")
+    @GetMapping(value = "/getStudents")
+    public ResponseEntity<GetAllStudentsResponse> getAllStudents() {
+        return ResponseEntity.ok(studentService.getAllStudents());
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT')")
     @GetMapping(value = "/getNonResident")
     public ResponseEntity<GetNonResidentStudentResponse> getNonResident() {
         return ResponseEntity.ok(studentService.getNonResident());
@@ -86,11 +89,12 @@ public class StudentController {
                 .body(body);
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT')")
-    @PostMapping(value = "/attachDocuments/{studentId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT', 'STUDENT')")
+    @PostMapping(value = "/attachDocuments/{studentId}/{documentType}")
     public ResponseEntity<HttpStatus> attachDocuments(@PathVariable String studentId,
-                                                      @RequestPart List<MultipartFile> files) throws IOException {
-        studentService.saveDocuments(studentId, files);
+                                                      @PathVariable String documentType,
+                                                      @RequestPart MultipartFile file) throws IOException {
+        studentService.saveDocuments(studentId,documentType, file);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
