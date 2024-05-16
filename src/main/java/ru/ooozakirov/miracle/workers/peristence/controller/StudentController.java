@@ -27,17 +27,17 @@ public class StudentController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT')")
     @PostMapping(value = "/create", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<HttpStatus> create(@RequestBody CreateStudentRequest request) {
-        studentService.create(request);
+    public ResponseEntity<HttpStatus> createStudent(@RequestBody CreateStudentRequest request) {
+        studentService.createStudent(request);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('STUDENT')")
     @PostMapping(value = "/update/{studentId}")
-    public ResponseEntity<HttpStatus> update(@PathVariable String studentId,
+    public ResponseEntity<HttpStatus> updateStudent(@PathVariable String studentId,
                                              @RequestBody UpdateStudentRequest request) throws IOException {
-        studentService.update(request, studentId);
+        studentService.updateStudent(request, studentId);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -49,7 +49,7 @@ public class StudentController {
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT')")
-    @GetMapping(value = "/getStudents")
+    @GetMapping(value = "/getAll")
     public ResponseEntity<GetAllStudentsResponse> getAllStudents() {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
@@ -75,26 +75,6 @@ public class StudentController {
     public ResponseEntity<HttpStatus> uploadPhoto(@PathVariable String studentId,
                                                   @RequestPart MultipartFile file) throws IOException {
         studentService.savePhoto(studentId, file);
-
-        return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT', 'STUDENT')")
-    @GetMapping(value = "/getDocument/{studentId}/{filename}")
-    public ResponseEntity<Resource> getDocuments(@PathVariable String studentId, @PathVariable String filename) {
-        var document = studentService.getDocument(studentId, filename);
-        var body = new ByteArrayResource(document.getData());
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, document.getMimeType())
-                .body(body);
-    }
-
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT', 'STUDENT')")
-    @PostMapping(value = "/attachDocuments/{studentId}/{documentType}")
-    public ResponseEntity<HttpStatus> attachDocuments(@PathVariable String studentId,
-                                                      @PathVariable String documentType,
-                                                      @RequestPart MultipartFile file) throws IOException {
-        studentService.saveDocuments(studentId, documentType, file);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }

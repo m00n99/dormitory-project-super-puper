@@ -28,7 +28,7 @@ public class StudentService {
     private final UserMapper userMapper;
 
     @Transactional
-    public void create(CreateStudentRequest request) {
+    public void createStudent(CreateStudentRequest request) {
         var user = userMapper.mapStudentRequestToUser(request);
         var student = studentMapper.mapCreateStudentRequestToStudent(request);
         student.setUser(user);
@@ -47,7 +47,7 @@ public class StudentService {
     }
 
     @Transactional
-    public void update(UpdateStudentRequest request, String studentId) throws IOException {
+    public void updateStudent(UpdateStudentRequest request, String studentId) throws IOException {
         var student = studentRepository.findByStudentId(studentId).orElse(null);
         studentMapper.updateStudentFromDto(student, request);
         studentRepository.save(student);
@@ -67,25 +67,6 @@ public class StudentService {
         var student = studentRepository.findByStudentId(studentId).orElse(null);
 
         return student.getPhoto();
-    }
-
-    public Document getDocument(String studentId, String filename) {
-        var student = studentRepository.findByStudentId(studentId).orElse(null);
-        var documents = student.getDocuments();
-        return documents.stream().filter(document -> filename.equals(filename)).findAny().orElse(null);
-    }
-
-    @Transactional
-    public void saveDocuments(String studentId, String documentType, MultipartFile file) throws IOException {
-        var student = studentRepository.findByStudentId(studentId).orElse(null);
-        var timeAttach = LocalDateTime.now();
-        var format = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm:ss");
-        documentRepository.save(new Document()
-                .setFilename(documentType + " " + format.format(timeAttach))
-                .setStudent(student)
-                .setType(DocumentType.valueOfLabel(documentType))
-                .setMimeType(file.getContentType())
-                .setData(file.getBytes()));
     }
 
     public GetAllStudentsResponse getAllStudents() {
