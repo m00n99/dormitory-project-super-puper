@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.ooozakirov.miracle.workers.peristence.dto.student.*;
+import ru.ooozakirov.miracle.workers.peristence.dto.document.GetFilenamesResponse;
 import ru.ooozakirov.miracle.workers.peristence.model.Document;
 import ru.ooozakirov.miracle.workers.peristence.model.DocumentType;
 import ru.ooozakirov.miracle.workers.peristence.repo.DocumentRepository;

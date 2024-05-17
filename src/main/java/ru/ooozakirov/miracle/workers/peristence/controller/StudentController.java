@@ -78,4 +78,13 @@ public class StudentController {
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT')")
+    @PostMapping(value = "/saveInventory/{studentId}")
+    public ResponseEntity<HttpStatus> saveInventory(@PathVariable String studentId,
+                                                    @RequestBody SaveStudentInventoryRequest request) {
+        studentService.saveInventory(request, studentId);
+
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 }

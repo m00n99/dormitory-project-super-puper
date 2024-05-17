@@ -18,7 +18,3 @@ public class Inventory {
     @Enumerated(EnumType.STRING)
     private InventoryType type;
 }
-
-enum InventoryType {
-    BLANKET
-}

@@ -7,10 +7,10 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.ooozakirov.miracle.workers.peristence.dto.student.*;
 import ru.ooozakirov.miracle.workers.peristence.mapper.StudentMapper;
 import ru.ooozakirov.miracle.workers.peristence.mapper.UserMapper;
-import ru.ooozakirov.miracle.workers.peristence.model.Document;
-import ru.ooozakirov.miracle.workers.peristence.model.DocumentType;
+import ru.ooozakirov.miracle.workers.peristence.model.*;
 import ru.ooozakirov.miracle.workers.peristence.model.Photo;
 import ru.ooozakirov.miracle.workers.peristence.repo.DocumentRepository;
+import ru.ooozakirov.miracle.workers.peristence.repo.InventoryRepository;
 import ru.ooozakirov.miracle.workers.peristence.repo.StudentRepository;
 
 import java.io.IOException;
@@ -18,12 +18,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class StudentService {
     private final StudentRepository studentRepository;
-    private final DocumentRepository documentRepository;
+    private final InventoryRepository inventoryRepository;
     private final StudentMapper studentMapper;
     private final UserMapper userMapper;
 
@@ -74,5 +75,27 @@ public class StudentService {
                 .stream().map(studentMapper::mapStudentToGetStudentResponse).toList();
         return new GetAllStudentsResponse()
                 .setStudents(students);
+    }
+
+    @Transactional
+    public void saveInventory(SaveStudentInventoryRequest request, String studentId) {
+        var student = studentRepository.findByStudentId(studentId).orElse(null);
+        var inventories = Optional.ofNullable(student.getInventories());
+        if (inventories.isEmpty()) {
+            addListInventories(request, student);
+            return;
+        }
+        for (Inventory inventory : inventories.get()){
+            inventoryRepository.delete(inventory);
+        }
+        addListInventories(request, student);
+    }
+
+    private void addListInventories (SaveStudentInventoryRequest request, Student student) {
+        for (String name : request.getInventories()) {
+            inventoryRepository.save(new Inventory()
+                    .setStudent(student)
+                    .setType(InventoryType.valueOfLabel(name)));
+        }
     }
 }

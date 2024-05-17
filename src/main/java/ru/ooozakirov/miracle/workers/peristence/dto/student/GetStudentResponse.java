@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.ooozakirov.miracle.workers.peristence.model.Gender;
 
+import java.util.List;
+
 @Data
 @Accessors(chain = true)
 public class GetStudentResponse {
@@ -15,5 +17,6 @@ public class GetStudentResponse {
     private String email;
     private Gender gender;
     private Room room;
+    private List<String> inventories;
 }
 
