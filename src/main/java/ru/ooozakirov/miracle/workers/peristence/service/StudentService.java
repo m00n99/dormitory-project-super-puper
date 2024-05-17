@@ -37,7 +37,7 @@ public class StudentService {
     }
 
     public GetStudentResponse getByStudentId(String studentId) {
-        var student = studentRepository.findByStudentId(studentId).orElse(null);
+        var student = studentRepository.findByStudentId(studentId).orElseThrow();
 
         return studentMapper.mapStudentToGetStudentResponse(student);
     }
@@ -49,14 +49,14 @@ public class StudentService {
 
     @Transactional
     public void updateStudent(UpdateStudentRequest request, String studentId) throws IOException {
-        var student = studentRepository.findByStudentId(studentId).orElse(null);
+        var student = studentRepository.findByStudentId(studentId).orElseThrow();
         studentMapper.updateStudentFromDto(student, request);
         studentRepository.save(student);
     }
 
     @Transactional
     public void savePhoto(String studentId, MultipartFile file) throws IOException {
-        var student = studentRepository.findByStudentId(studentId).orElse(null);
+        var student = studentRepository.findByStudentId(studentId).orElseThrow();
         student.setPhoto(new Photo()
                 .setFilename(file.getOriginalFilename())
                 .setMimeType(file.getContentType())
@@ -65,9 +65,7 @@ public class StudentService {
     }
 
     public Photo getPhoto(String studentId) {
-        var student = studentRepository.findByStudentId(studentId).orElse(null);
-
-        return student.getPhoto();
+        return studentRepository.findByStudentId(studentId).map(Student::getPhoto).orElseThrow();
     }
 
     public GetAllStudentsResponse getAllStudents() {
@@ -79,7 +77,7 @@ public class StudentService {
 
     @Transactional
     public void saveInventory(SaveStudentInventoryRequest request, String studentId) {
-        var student = studentRepository.findByStudentId(studentId).orElse(null);
+        var student = studentRepository.findByStudentId(studentId).orElseThrow();
         var inventories = Optional.ofNullable(student.getInventories());
         if (inventories.isEmpty()) {
             addListInventories(request, student);
