@@ -43,21 +43,21 @@ public class StudentController {
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('STUDENT')")
-    @PostMapping(value = "/update/{studentId}")
-    public ResponseEntity<HttpStatus> updateStudent(@PathVariable String studentId,
-                                                    @RequestBody UpdateStudentRequest request) {
-        try {
-            log.info("Update student with id {}. Request {}", studentId, objectMapper.writeValueAsString(request));
-            studentService.updateStudent(request, studentId);
-            log.info("Success update student with id {}", studentId);
-            return ResponseEntity.ok(HttpStatus.OK);
-        } catch (Exception e) {
-            var errorMessage = "Error update student with id " + studentId + " : ";
-            log.error(errorMessage, e);
-            return ResponseEntity.internalServerError().build();
-        }
-    }
+//    @PreAuthorize("hasAnyAuthority('STUDENT')")
+//    @PostMapping(value = "/update/{studentId}")
+//    public ResponseEntity<HttpStatus> updateStudent(@PathVariable String studentId,
+//                                                    @RequestBody UpdateStudentRequest request) {
+//        try {
+//            log.info("Update student with id {}. Request {}", studentId, objectMapper.writeValueAsString(request));
+//            studentService.updateStudent(request, studentId);
+//            log.info("Success update student with id {}", studentId);
+//            return ResponseEntity.ok(HttpStatus.OK);
+//        } catch (Exception e) {
+//            var errorMessage = "Error update student with id " + studentId + " : ";
+//            log.error(errorMessage, e);
+//            return ResponseEntity.internalServerError().build();
+//        }
+//    }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT', 'STUDENT')")
     @GetMapping(value = "/get/{studentId}")
