@@ -28,7 +28,7 @@ public class FloorService {
     }
 
     public GetFloorResponse getFloor(String number) {
-        var floor = floorRepository.findByNumber(number).orElse(null);
+        var floor = floorRepository.findByNumber(number).orElseThrow();
         return floorMapper.mapFloorToGetFloorResponse(floor);
     }
 }

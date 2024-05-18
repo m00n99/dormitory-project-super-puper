@@ -1,6 +1,7 @@
 package ru.ooozakirov.miracle.workers.peristence.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,6 +11,7 @@ import ru.ooozakirov.miracle.workers.peristence.service.RoomService;
 @RestController
 @RequestMapping("/room")
 @RequiredArgsConstructor
+@Slf4j
 public class RoomController {
     private final RoomService roomService;
 
@@ -17,8 +19,15 @@ public class RoomController {
     @PostMapping("/attach/{studentId}/{roomNumber}")
     public ResponseEntity<HttpStatus> attach(@PathVariable String studentId,
                                              @PathVariable String roomNumber){
-        roomService.attach(studentId, roomNumber);
-
-        return ResponseEntity.ok(HttpStatus.OK);
+        try {
+            log.info("Attach student with id {} in room {}", studentId, roomNumber);
+            roomService.attach(studentId, roomNumber);
+            log.info("Success attach student with id {} in room {}", studentId, roomNumber);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            var errorMessage = "Error attach student with id " + studentId + " in room " + roomNumber + ": ";
+            log.error(errorMessage, e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

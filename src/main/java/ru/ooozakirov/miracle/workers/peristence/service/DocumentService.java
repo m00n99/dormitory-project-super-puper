@@ -21,14 +21,14 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
 
     public Document getDocument(String studentId, String filename) {
-        var student = studentRepository.findByStudentId(studentId).orElse(null);
+        var student = studentRepository.findByStudentId(studentId).orElseThrow();
         var documents = student.getDocuments();
-        return documents.stream().filter(document -> filename.equals(filename)).findAny().orElse(null);
+        return documents.stream().filter(document -> filename.equals(filename)).findAny().orElseThrow();
     }
 
     @Transactional
     public void saveDocuments(String studentId, String documentType, MultipartFile file) throws IOException {
-        var student = studentRepository.findByStudentId(studentId).orElse(null);
+        var student = studentRepository.findByStudentId(studentId).orElseThrow();
         var timeAttach = LocalDateTime.now();
         var format = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
         documentRepository.save(new Document()
@@ -40,7 +40,7 @@ public class DocumentService {
     }
 
     public GetFilenamesResponse getFilenames(String studentId) {
-        var student = studentRepository.findByStudentId(studentId).orElse(null);
+        var student = studentRepository.findByStudentId(studentId).orElseThrow();
         var filenames = student.getDocuments().stream().map(Document::getFilename).toList();
         return new GetFilenamesResponse().setFilenames(filenames);
     }

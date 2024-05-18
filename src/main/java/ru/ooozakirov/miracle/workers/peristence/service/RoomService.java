@@ -17,8 +17,8 @@ public class RoomService {
 
     @Transactional
     public void attach(String studentId, String roomNumber) {
-        var student = studentRepository.findByStudentId(studentId).orElse(null);
-        var room = roomRepository.findByNumber(roomNumber).orElse(null);
+        var student = studentRepository.findByStudentId(studentId).orElseThrow();
+        var room = roomRepository.findByNumber(roomNumber).orElseThrow();
         student.setRoom(room);
         studentRepository.save(student);
     }

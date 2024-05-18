@@ -21,6 +21,7 @@ public class GetStudentResponse {
     private Gender gender;
     private Room room;
     private List<String> inventories;
+    private Photo photo;
     private Error error;
 }
 
