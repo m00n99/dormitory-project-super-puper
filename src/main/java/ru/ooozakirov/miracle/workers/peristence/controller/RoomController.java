@@ -30,4 +30,19 @@ public class RoomController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT')")
+    @PostMapping("/unassign/{studentId}")
+    public ResponseEntity<HttpStatus> unassign(@PathVariable String studentId){
+        try {
+            log.info("Unassign student with id {} from room", studentId);
+            roomService.unassign(studentId);
+            log.info("Success unassign student with id {} from room", studentId);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            var errorMessage = "Error unassign student with id " + studentId + " from room: ";
+            log.error(errorMessage, e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

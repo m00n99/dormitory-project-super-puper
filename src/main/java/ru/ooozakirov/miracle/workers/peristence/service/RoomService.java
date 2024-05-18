@@ -22,4 +22,11 @@ public class RoomService {
         student.setRoom(room);
         studentRepository.save(student);
     }
+
+    @Transactional
+    public void unassign(String studentId) {
+        var student = studentRepository.findByStudentId(studentId).orElseThrow();
+        student.setRoom(null);
+        studentRepository.save(student);
+    }
 }
