@@ -141,4 +141,20 @@ public class StudentController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT')")
+    @PostMapping(value = "/evict/{studentId}")
+    public ResponseEntity<HttpStatus> evict(@PathVariable String studentId,
+                                                    @RequestBody SaveStudentInventoryRequest request) {
+        try {
+            log.info("Save inventory of student request with id {}", studentId);
+            studentService.saveInventory(request, studentId);
+            log.info("Success save inventory of student with id {}", studentId);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            var errorMessage = "Error save inventory of student: ";
+            log.error(errorMessage, e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

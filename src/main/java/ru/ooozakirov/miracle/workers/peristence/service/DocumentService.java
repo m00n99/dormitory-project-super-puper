@@ -23,7 +23,7 @@ public class DocumentService {
     public Document getDocument(String studentId, String filename) {
         var student = studentRepository.findByStudentId(studentId).orElseThrow();
         var documents = student.getDocuments();
-        return documents.stream().filter(document -> filename.equals(filename)).findAny().orElseThrow();
+        return documents.stream().filter(document -> document.getFilename().equals(filename)).findAny().orElseThrow();
     }
 
     @Transactional
@@ -43,5 +43,13 @@ public class DocumentService {
         var student = studentRepository.findByStudentId(studentId).orElseThrow();
         var filenames = student.getDocuments().stream().map(Document::getFilename).toList();
         return new GetFilenamesResponse().setFilenames(filenames);
+    }
+
+    @Transactional
+    public void delete(String studentId, String filename) {
+        var student = studentRepository.findByStudentId(studentId).orElseThrow();
+        var deletedDocument = student.getDocuments()
+                .stream().filter(document -> document.getFilename().equals(filename)).findAny().orElseThrow();
+        documentRepository.delete(deletedDocument);
     }
 }

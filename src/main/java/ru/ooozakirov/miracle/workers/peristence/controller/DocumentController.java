@@ -75,4 +75,19 @@ public class DocumentController {
                             .setMessage(errorMessage + e.getMessage())));
         }
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT')")
+    @GetMapping(value = "/delete/{studentId}/{filename}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable String studentId, @PathVariable String filename) {
+        try {
+            log.info("Delete document student with id {}, filename {}", studentId, filename);
+            documentService.delete(studentId, filename);
+            log.info("Success delete document student with id {}, filename {}", studentId, filename);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            var errorMessage = "Error delete document student with id " + studentId + ", filename " + filename + ": ";
+            log.error(errorMessage, e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }
