@@ -9,7 +9,7 @@ services:
       - /dormitory-app/node_modules:/usr/app/node_modules
       - ./dormitory-app:/usr/app
   backend:
-    image: 'm00nnnn/myfirstrepository:0.0.121'
+    image: 'm00nnnn/myfirstrepository:0.0.126'
     build:
       context: .
     expose:

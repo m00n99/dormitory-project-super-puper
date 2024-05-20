@@ -24,6 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StudentService {
     private final StudentRepository studentRepository;
+    private final RoomService roomService;
     private final InventoryRepository inventoryRepository;
     private final StudentMapper studentMapper;
     private final UserMapper userMapper;
@@ -95,5 +96,12 @@ public class StudentService {
                     .setStudent(student)
                     .setType(InventoryType.valueOfLabel(name)));
         }
+    }
+
+    @Transactional
+    public void evict(String studentId) {
+        var student = studentRepository.findByStudentId(studentId).orElseThrow();
+        student.setStatus(StatusStudent.EVICTED);
+        roomService.unassign(studentId);
     }
 }

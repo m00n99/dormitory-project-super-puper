@@ -144,15 +144,14 @@ public class StudentController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT')")
     @PostMapping(value = "/evict/{studentId}")
-    public ResponseEntity<HttpStatus> evict(@PathVariable String studentId,
-                                                    @RequestBody SaveStudentInventoryRequest request) {
+    public ResponseEntity<HttpStatus> evict(@PathVariable String studentId) {
         try {
-            log.info("Save inventory of student request with id {}", studentId);
-            studentService.saveInventory(request, studentId);
-            log.info("Success save inventory of student with id {}", studentId);
+            log.info("Evict student with id {}", studentId);
+            studentService.evict(studentId);
+            log.info("Success evict student with id {}", studentId);
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (Exception e) {
-            var errorMessage = "Error save inventory of student: ";
+            var errorMessage = "Error evict student: ";
             log.error(errorMessage, e);
             return ResponseEntity.internalServerError().build();
         }

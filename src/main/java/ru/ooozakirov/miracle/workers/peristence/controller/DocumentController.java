@@ -77,7 +77,7 @@ public class DocumentController {
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'COMMANDANT')")
-    @GetMapping(value = "/delete/{studentId}/{filename}")
+    @PostMapping(value = "/delete/{studentId}/{filename}")
     public ResponseEntity<HttpStatus> delete(@PathVariable String studentId, @PathVariable String filename) {
         try {
             log.info("Delete document student with id {}, filename {}", studentId, filename);

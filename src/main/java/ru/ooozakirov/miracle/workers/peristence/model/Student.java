@@ -21,6 +21,7 @@ public class Student {
     private String middlename;
     private String phone;
     private String email;
+    private StatusStudent status;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "photo_id", referencedColumnName = "id")
     private Photo photo;
